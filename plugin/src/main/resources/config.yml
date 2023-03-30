@@ -1,0 +1,17 @@
+
+items:
+  "some_sword":
+    0:
+      name: "§aNormal sword"
+      lore: "§2Some normal sword..."
+      item: WOODEN_SWORD
+      enchantments:
+      - DAMAGE_ALL
+      unbreakable: false
+      eventsToUpgrade:
+      - kill 10 zombie
+      - kill 1 spider
+    1:
+      name: "§aSuper sword!"
+      lore: "§2Some super sword!"
+      item: DIAMOND_SWORD
