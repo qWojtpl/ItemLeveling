@@ -16,6 +16,8 @@ import pl.itemleveling.ItemLeveling;
 import pl.itemleveling.item.CustomItem;
 import pl.itemleveling.item.ItemManager;
 
+import java.text.MessageFormat;
+
 public class Events implements Listener {
 
     private final ItemLeveling plugin = ItemLeveling.getInstance();
@@ -57,6 +59,10 @@ public class Events implements Listener {
             }
             if(!splitEv[2].equalsIgnoreCase(splitSourceEvent[1])) continue;
             if(current >= required) continue;
+            if(customItem.getMessages().get(level) != null) {
+                player.sendMessage(
+                        MessageFormat.format(customItem.getMessages().get(level), plugin.getDataHandler().getPrefix()));
+            }
             current += 1;
             sum += 1;
             nbt.setInteger("itemleveling-event-" + i, current);

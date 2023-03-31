@@ -54,6 +54,7 @@ public class DataHandler {
             HashMap<Integer, List<Integer>> enchantmentsLevels = new HashMap<>();
             HashMap<Integer, Boolean> unbreakables = new HashMap<>();
             HashMap<Integer, List<String>> events = new HashMap<>();
+            HashMap<Integer, String> messages = new HashMap<>();
             for(Integer lvl : levels) {
                 names.put(lvl, yml.getString("items." + name + "." + lvl + ".name"));
                 lores.put(lvl, yml.getString("items." + name + "." + lvl + ".lore"));
@@ -99,8 +100,9 @@ public class DataHandler {
                 enchantmentsLevels.put(lvl, actualLevels);
                 unbreakables.put(lvl, yml.getBoolean("items." + name + "." + lvl + ".unbreakable"));
                 events.put(lvl, yml.getStringList("items." + name + "." + lvl + ".eventsToUpgrade"));
+                messages.put(lvl, yml.getString("items." + name + "." + lvl + ".progressMessage"));
             }
-            CustomItem ci = new CustomItem(name, names, lores, items, enchantments, enchantmentsLevels, unbreakables, events);
+            CustomItem ci = new CustomItem(name, names, lores, items, enchantments, enchantmentsLevels, unbreakables, events, messages);
             im.getItems().add(ci);
         }
     }

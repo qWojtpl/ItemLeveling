@@ -10,6 +10,8 @@ items:
       enchantments:
       - DAMAGE_ALL
       unbreakable: false
+      # Use {0} for prefix
+      progressMessage: "{0}§aI feel power..."
       eventsToUpgrade:
       - kill 10 zombie
       - kill 1 spider
