@@ -1,3 +1,5 @@
+config:
+  prefix: "§e[§aItemLeveling§e] "
 
 items:
   "some_sword":

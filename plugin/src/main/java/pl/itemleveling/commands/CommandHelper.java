@@ -21,6 +21,7 @@ public class CommandHelper implements TabCompleter {
         if(!(sender instanceof Player) || !sender.hasPermission(
                 plugin.getPermissionManager().getPermission("itemleveling.manage"))) return null;
         if(args.length == 1) {
+            completions.add("help");
             completions.add("get");
             completions.add("info");
             completions.add("reload");
@@ -29,6 +30,10 @@ public class CommandHelper implements TabCompleter {
                 for(CustomItem ci : plugin.getItemManager().getItems()) {
                     completions.add(ci.getName());
                 }
+            }
+        } else if(args.length == 3) {
+            if(args[0].equalsIgnoreCase("get")) {
+                completions.add("#LEVEL");
             }
         }
         return StringUtil.copyPartialMatches(args[args.length-1], completions, new ArrayList<>());

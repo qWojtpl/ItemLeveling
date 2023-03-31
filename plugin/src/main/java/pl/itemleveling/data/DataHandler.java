@@ -1,5 +1,6 @@
 package pl.itemleveling.data;
 
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,9 +14,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Getter
 public class DataHandler {
 
     private final ItemLeveling plugin = ItemLeveling.getInstance();
+    private String prefix;
 
     public void loadConfig() {
         ItemManager im = plugin.getItemManager();
@@ -25,6 +28,7 @@ public class DataHandler {
             plugin.saveResource("config.yml", false);
         }
         YamlConfiguration yml = YamlConfiguration.loadConfiguration(configFile);
+        prefix = yml.getString("config.prefix");
         ConfigurationSection section = yml.getConfigurationSection("items");
         if(section == null) return;
         for(String name : section.getKeys(false)) {
@@ -38,6 +42,10 @@ public class DataHandler {
                     plugin.getLogger().severe("Cannot compare " + lvl + " with a correct level number! Replacing with 1...");
                     levels.add(1);
                 }
+            }
+            if(!levels.contains(0)) {
+                plugin.getLogger().severe("Cannot find level 0 for " + name + "!");
+                continue;
             }
             HashMap<Integer, String> names = new HashMap<>();
             HashMap<Integer, String> lores = new HashMap<>();

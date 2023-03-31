@@ -2,11 +2,13 @@ package pl.itemleveling.events;
 
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -44,6 +46,15 @@ public class Events implements Listener {
             max += required;
             sum += current;
             if(!splitEv[0].equalsIgnoreCase(splitSourceEvent[0])) continue;
+            if(splitEv[2].equalsIgnoreCase("*")) {
+                splitEv[2] = splitSourceEvent[1];
+            }
+            if(splitEv[2].contains("*%")) {
+                String type = splitEv[2].replace("*%", "");
+                if(splitSourceEvent[1].toLowerCase().contains(type.toLowerCase())) {
+                    splitEv[2] = splitSourceEvent[1];
+                }
+            }
             if(!splitEv[2].equalsIgnoreCase(splitSourceEvent[1])) continue;
             if(current >= required) continue;
             current += 1;
@@ -65,21 +76,32 @@ public class Events implements Listener {
         ItemStack murder_weapon = killer.getInventory().getItemInMainHand();
         if(murder_weapon.getType().equals(Material.AIR)) return;
         NBTItem nbt = new NBTItem(murder_weapon);
-        if(nbt.getBoolean("itemleveling-isSuperItem")) {
-            check(murder_weapon, killer, "kill " + victim);
-        }
+        if(nbt.getBoolean("itemleveling-isSuperItem")) check(murder_weapon, killer, "kill " + victim);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDestroy(BlockBreakEvent event) {
         if(event.isCancelled()) return;
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
-        check(item, event.getPlayer(), "break " + event.getBlock().getType());
+        if(item.getType().equals(Material.AIR)) return;
+        NBTItem nbt = new NBTItem(item);
+        if(nbt.getBoolean("itemleveling-isSuperItem")) check(item, event.getPlayer(), "break " + event.getBlock().getType());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onDamage(EntityDamageEvent event) {
-
+    public void onDamage(EntityDamageByEntityEvent event) {
+        if(event.isCancelled()) return;
+        if(!event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) return;
+        Entity damager = event.getDamager();
+        if(!(damager instanceof Player)) return;
+        ItemStack item = ((Player) damager).getInventory().getItemInMainHand();
+        NBTItem nbt = new NBTItem(item);
+        if(nbt.getBoolean("itemleveling-isSuperItem")) {
+            double damage = event.getDamage();
+            for(int i = 0; i < damage; i++) {
+                check(item, (Player) damager, "damage " + event.getEntity().getType());
+            }
+        }
     }
 
 }
