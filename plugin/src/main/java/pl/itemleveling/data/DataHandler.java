@@ -33,11 +33,10 @@ public class DataHandler {
             List<Integer> levels = new ArrayList<>();
             for(String lvl : section1.getKeys(false)) {
                 try {
-                    levels.add(Integer.valueOf(lvl));
+                    levels.add(Integer.parseInt(lvl));
                 } catch(NumberFormatException e) {
-                    plugin.getLogger().severe("Cannot compare " + lvl + " with a correct level number! " +
-                            "Don't loading other items...");
-                    return;
+                    plugin.getLogger().severe("Cannot compare " + lvl + " with a correct level number! Replacing with 1...");
+                    levels.add(1);
                 }
             }
             HashMap<Integer, String> names = new HashMap<>();
@@ -46,6 +45,7 @@ public class DataHandler {
             HashMap<Integer, List<Enchantment>> enchantments = new HashMap<>();
             HashMap<Integer, List<Integer>> enchantmentsLevels = new HashMap<>();
             HashMap<Integer, Boolean> unbreakables = new HashMap<>();
+            HashMap<Integer, List<String>> events = new HashMap<>();
             for(Integer lvl : levels) {
                 names.put(lvl, yml.getString("items." + name + "." + lvl + ".name"));
                 lores.put(lvl, yml.getString("items." + name + "." + lvl + ".lore"));
@@ -66,33 +66,33 @@ public class DataHandler {
                 items.put(lvl, material);
                 List<Enchantment> actualEnchs = new ArrayList<>();
                 List<Integer> actualLevels = new ArrayList<>();
-                List<String> enchs = yml.getStringList("items." + name + "." + lvl + ".enchantments");
-                for(String ench : enchs) {
-                    String[] enchantAndLevel = ench.split(":");
+                List<String> allEnchs = yml.getStringList("items." + name + "." + lvl + ".enchantments");
+                for(String enchant : allEnchs) {
+                    String[] enchantAndLevel = enchant.split(":");
                     if(enchantAndLevel.length < 2) {
-                        plugin.getLogger().warning("Cannot find enchantment (or level) for " + name +
-                                ". Don't loading other items...");
-                        return;
+                        plugin.getLogger().warning("Cannot find enchantment (or level) for " + name + ". Replacing with ALL_DAMAGE:1...");
+                        enchantAndLevel = new String[]{"ALL_DAMAGE", "1"};
                     }
                     Enchantment e = Enchantment.getByName(enchantAndLevel[0]);
                     if(e == null) {
-                        plugin.getLogger().warning("Cannot find enchantment: " + ench + ", replacing with flame...");
+                        plugin.getLogger().warning("Cannot find enchantment: " + enchant + ", replacing with flame...");
                         e = Enchantment.ARROW_FIRE;
                     }
                     actualEnchs.add(e);
                     try {
-                        actualLevels.add(Integer.valueOf(enchantAndLevel[1]));
+                        actualLevels.add(Integer.parseInt(enchantAndLevel[1]));
                     } catch(NumberFormatException exception) {
-                        plugin.getLogger().severe("Cannot compare " + ench.split(":")[1] +
-                                " with a correct level number! Don't loading other items...");
-                        return;
+                        plugin.getLogger().severe("Cannot compare " + enchant.split(":")[1] +
+                                " with a correct level number! Replacing with 1...");
+                        actualLevels.add(1);
                     }
                 }
                 enchantments.put(lvl, actualEnchs);
                 enchantmentsLevels.put(lvl, actualLevels);
                 unbreakables.put(lvl, yml.getBoolean("items." + name + "." + lvl + ".unbreakable"));
+                events.put(lvl, yml.getStringList("items." + name + "." + lvl + ".eventsToUpgrade"));
             }
-            CustomItem ci = new CustomItem(name, names, lores, items, enchantments, enchantmentsLevels, unbreakables);
+            CustomItem ci = new CustomItem(name, names, lores, items, enchantments, enchantmentsLevels, unbreakables, events);
             im.getItems().add(ci);
         }
     }
