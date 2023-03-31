@@ -18,6 +18,9 @@ public class ItemManager {
     private final List<CustomItem> items = new ArrayList<>();
 
     public ItemStack getItemStack(CustomItem item, int level) {
+        if(!item.getItems().containsKey(level)) {
+            level = 0;
+        }
         ItemStack is = new ItemStack(item.getItems().get(level));
         ItemMeta meta = is.getItemMeta();
         meta.setDisplayName(item.getNames().get(level));
@@ -27,7 +30,7 @@ public class ItemManager {
         for(int i = 0; i < item.getEnchants().get(level).size(); i++) {
             meta.addEnchant(item.getEnchants().get(level).get(i), item.getEnchantsLevels().get(level).get(i), true);
         }
-        meta.setUnbreakable(item.getUnbreakables().get(0));
+        meta.setUnbreakable(item.getUnbreakables().get(level));
         is.setItemMeta(meta);
         NBTItem nbt = new NBTItem(is);
         nbt.setString("itemleveling-id", item.getName());

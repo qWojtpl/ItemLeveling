@@ -1,6 +1,7 @@
 package pl.itemleveling.events;
 
 import de.tr7zw.nbtapi.NBTItem;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -62,6 +63,7 @@ public class Events implements Listener {
         Player killer = event.getEntity().getKiller();
         String victim = event.getEntity().getType().name();
         ItemStack murder_weapon = killer.getInventory().getItemInMainHand();
+        if(murder_weapon.getType().equals(Material.AIR)) return;
         NBTItem nbt = new NBTItem(murder_weapon);
         if(nbt.getBoolean("itemleveling-isSuperItem")) {
             check(murder_weapon, killer, "kill " + victim);
@@ -70,7 +72,9 @@ public class Events implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDestroy(BlockBreakEvent event) {
-
+        if(event.isCancelled()) return;
+        ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
+        check(item, event.getPlayer(), "break " + event.getBlock().getType());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
