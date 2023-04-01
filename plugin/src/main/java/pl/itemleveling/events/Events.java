@@ -101,6 +101,7 @@ public class Events implements Listener {
         Entity damager = event.getDamager();
         if(!(damager instanceof Player)) return;
         ItemStack item = ((Player) damager).getInventory().getItemInMainHand();
+        if(item.getType().equals(Material.AIR)) return;
         NBTItem nbt = new NBTItem(item);
         if(nbt.getBoolean("itemleveling-isSuperItem")) {
             double damage = event.getDamage();
