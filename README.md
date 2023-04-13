@@ -98,7 +98,7 @@ items:
       item: NETHERITE_AXE
 ```
 
-Example of first item:<br>
+Example of an item:<br>
 `some_sword` - Name of the item<br>
 `0` - Level 0 of the item (first level)<br>
 `name` - Name of level 0 item<br>
@@ -106,6 +106,7 @@ Example of first item:<br>
 `enchantments` - Enchantments of level 0 item (get enchantments from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/enchantments/Enchantment.html)<br>
 ` - DAMAGE_ALL:10` - name of enchantment:enchantment level (in this case this is sharpness 10)<br>
 `unbreakable` - If set to true then item is unbreakable<br>
+`progressMessage` - Use {0} to get prefix. This message will be send to player every progress they made (break a block, kill a monster etc.)<br>
 `eventsToUpgrade` - Events to upgrade item to the next level. If you don't want item of this level to be levelable, then delete eventsToUpgrade. On upgrade if there's no next level item will return to level 0.<br>
 
 Supported events:
