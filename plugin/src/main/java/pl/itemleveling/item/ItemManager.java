@@ -25,8 +25,10 @@ public class ItemManager {
         ItemMeta meta = is.getItemMeta();
         meta.setDisplayName(item.getNames().get(level));
         String itemLore = item.getLores().get(level);
-        List<String> lore = Arrays.asList(itemLore.split("%nl%"));
-        meta.setLore(lore);
+        if(itemLore != null) {
+            List<String> lore = Arrays.asList(itemLore.split("%nl%"));
+            meta.setLore(lore);
+        }
         for(int i = 0; i < item.getEnchants().get(level).size(); i++) {
             meta.addEnchant(item.getEnchants().get(level).get(i), item.getEnchantsLevels().get(level).get(i), true);
         }

@@ -4,6 +4,7 @@ main: pl.itemleveling.ItemLeveling
 api-version: 1.19
 authors: [Assasin98980]
 description: Add item leveling to your Minecraft server
+depend: [NBTAPI]
 commands:
   itemleveling:
     usage: /<command>

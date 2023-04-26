@@ -68,6 +68,10 @@ public class DataHandler {
                     } else {
                         material = m;
                     }
+                    if(material.equals(Material.AIR)) {
+                        plugin.getLogger().warning("Cannot use AIR as a material, replacing with stick...");
+                        material = Material.STICK;
+                    }
                 } else {
                     plugin.getLogger().warning("Cannot find null material, replacing with stick...");
                     material = Material.STICK;
