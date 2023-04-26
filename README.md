@@ -131,5 +131,5 @@ Supported events:
 Permission to manage: `itemleveling.manage`<br>
 `/il [help]` - Show help<br>
 `/il reload` - Reload configuration<br>
-`/il get <itemName> [level]` - Get levelable item<br>
+`/il get <itemName> [level] [player]` - Get levelable item<br>
 `/il info` - Shows information about item in your hand (if it is levelable item, level of item etc.)<br>

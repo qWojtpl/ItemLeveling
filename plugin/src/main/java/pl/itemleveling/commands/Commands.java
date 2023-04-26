@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import pl.itemleveling.ItemLeveling;
 import pl.itemleveling.item.CustomItem;
 import pl.itemleveling.item.ItemManager;
+import pl.itemleveling.util.PlayerUtil;
 
 public class Commands implements CommandExecutor {
 
@@ -31,10 +32,6 @@ public class Commands implements CommandExecutor {
                 plugin.getDataHandler().loadConfig();
                 sender.sendMessage(prefix + "§aReloaded!");
             } else if(args[0].equalsIgnoreCase("get")) {
-                if(!isPlayer) {
-                    sender.sendMessage(prefix + "§cYou must be a player to execute this command!");
-                    return true;
-                }
                 if(args.length > 1) {
                     ItemManager im = plugin.getItemManager();
                     boolean found = false;
@@ -59,10 +56,32 @@ public class Commands implements CommandExecutor {
                         sender.sendMessage(prefix + "§cCan't found item: " + args[1]);
                         return true;
                     }
-                    ((Player) sender).getInventory().addItem(im.getItemStack(item, count));
-                    sender.sendMessage(prefix + "§aEnjoy your new item!");
+                    Player p;
+                    if(args.length > 3) {
+                        p = PlayerUtil.getPlayer(args[3]);
+                        if(p == null) {
+                            sender.sendMessage(prefix + "§cCan't found player: " + args[3]);
+                            return true;
+                        } else if(PlayerUtil.isVanished(p)) {
+                            sender.sendMessage(prefix + "§cCan't found player: " + args[3]);
+                            return true;
+                        }
+                    } else {
+                        if(!isPlayer) {
+                            sender.sendMessage(prefix + "§cYou must be a player to execute this command! " +
+                                    "(you can only use /il get <item> <level> <player>)");
+                            return true;
+                        }
+                        p = (Player) sender;
+                    }
+                    p.getInventory().addItem(im.getItemStack(item, count));
+                    if(p.equals(sender)) {
+                        sender.sendMessage(prefix + "§aEnjoy your new item!");
+                    } else {
+                        sender.sendMessage(prefix + "§aAdded item to " + p.getName() + "'s inventory!");
+                    }
                 } else {
-                    sender.sendMessage(prefix + "§cCorrect usage: /il get <item> <level>");
+                    sender.sendMessage(prefix + "§cCorrect usage: /il get <item> [level] [player]");
                 }
             } else if(args[0].equalsIgnoreCase("info")) {
                 if(!isPlayer) {
@@ -101,7 +120,7 @@ public class Commands implements CommandExecutor {
         sender.sendMessage("§e<---------- §aItemLeveling §e---------->");
         sender.sendMessage("");
         sender.sendMessage("§a/il reload §2- §eReload configuration");
-        sender.sendMessage("§a/il get <item> <level> §2- §eGet custom item");
+        sender.sendMessage("§a/il get <item> [level] [player] §2- §eGet custom item");
         sender.sendMessage("§a/il info §2- §eCheck information about item in your hand");
         sender.sendMessage("");
         sender.sendMessage("§e<---------- §aItemLeveling §e---------->");

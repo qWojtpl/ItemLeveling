@@ -24,6 +24,7 @@ public class Events implements Listener {
 
     public void check(ItemStack item, Player player, String event) {
         NBTItem nbt = new NBTItem(item);
+        if(!nbt.getBoolean("itemleveling-isSuperItem")) return;
         String id = nbt.getString("itemleveling-id");
         int level = nbt.getInteger("itemleveling-itemLevel");
         CustomItem customItem = null;
@@ -81,8 +82,7 @@ public class Events implements Listener {
         String victim = event.getEntity().getType().name();
         ItemStack murder_weapon = killer.getInventory().getItemInMainHand();
         if(murder_weapon.getType().equals(Material.AIR)) return;
-        NBTItem nbt = new NBTItem(murder_weapon);
-        if(nbt.getBoolean("itemleveling-isSuperItem")) check(murder_weapon, killer, "kill " + victim);
+        check(murder_weapon, killer, "kill " + victim);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -90,8 +90,7 @@ public class Events implements Listener {
         if(event.isCancelled()) return;
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
         if(item.getType().equals(Material.AIR)) return;
-        NBTItem nbt = new NBTItem(item);
-        if(nbt.getBoolean("itemleveling-isSuperItem")) check(item, event.getPlayer(), "break " + event.getBlock().getType());
+        check(item, event.getPlayer(), "break " + event.getBlock().getType());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
