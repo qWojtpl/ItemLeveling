@@ -52,6 +52,14 @@ public class ItemManager {
                 }
             }
         }
+        for(int i = 36; i <= 39; i++) {
+            if(player.getInventory().getItem(i) != null) {
+                if(player.getInventory().getItem(i).equals(itemStack)) {
+                    slot = i;
+                    break;
+                }
+            }
+        }
         if(slot == -1) return;
         player.getInventory().setItem(slot, getItemStack(item, level));
         player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1.0F, 1.0F);

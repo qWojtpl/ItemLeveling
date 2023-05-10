@@ -3,6 +3,7 @@ package pl.itemleveling.events;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,6 +12,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import pl.itemleveling.ItemLeveling;
 import pl.itemleveling.item.CustomItem;
@@ -22,8 +24,9 @@ public class Events implements Listener {
 
     private final ItemLeveling plugin = ItemLeveling.getInstance();
 
-    public void check(ItemStack item, Player player, String event) {
+    public void check(ItemStack item, Player player, String event, boolean checkArmor) {
         NBTItem nbt = new NBTItem(item);
+        if(checkArmor) checkArmor(player, event);
         if(!nbt.getBoolean("itemleveling-isSuperItem")) return;
         String id = nbt.getString("itemleveling-id");
         int level = nbt.getInteger("itemleveling-itemLevel");
@@ -75,6 +78,14 @@ public class Events implements Listener {
         }
     }
 
+    public void checkArmor(Player player, String event) {
+        for(int i = 36; i <= 39; i++) {
+            ItemStack item = player.getInventory().getItem(i);
+            if(item == null) continue;
+            check(item, player, event, false);
+        }
+    }
+
     @EventHandler
     public void onKill(EntityDeathEvent event) {
         if(event.getEntity().getKiller() == null) return;
@@ -82,7 +93,7 @@ public class Events implements Listener {
         String victim = event.getEntity().getType().name();
         ItemStack murder_weapon = killer.getInventory().getItemInMainHand();
         if(murder_weapon.getType().equals(Material.AIR)) return;
-        check(murder_weapon, killer, "kill " + victim);
+        check(murder_weapon, killer, "kill " + victim, true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -90,7 +101,7 @@ public class Events implements Listener {
         if(event.isCancelled()) return;
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
         if(item.getType().equals(Material.AIR)) return;
-        check(item, event.getPlayer(), "break " + event.getBlock().getType());
+        check(item, event.getPlayer(), "break " + event.getBlock().getType(), true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -105,9 +116,19 @@ public class Events implements Listener {
         if(nbt.getBoolean("itemleveling-isSuperItem")) {
             double damage = event.getDamage();
             for(int i = 0; i < damage; i++) {
-                check(item, (Player) damager, "damage " + event.getEntity().getType());
+                check(item, (Player) damager, "damage " + event.getEntity().getType(), true);
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onFish(PlayerFishEvent event) {
+        if(event.isCancelled()) return;
+        if(!event.getState().toString().equals("CAUGHT_FISH")) return;
+        if(event.getCaught() == null) return;
+        if(!(event.getCaught() instanceof Item)) return;
+        ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
+        check(item, event.getPlayer(), "fish " + ((Item) event.getCaught()).getItemStack().getType().name(), true);
     }
 
 }

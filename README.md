@@ -31,6 +31,9 @@ config:
 <hr>
 
 ```yml
+config:
+  prefix: "§e[§aItemLeveling§e] "
+
 items:
   "some_sword":
     0:
@@ -96,6 +99,25 @@ items:
       name: "Super axe!"
       lore: "Super strange axe!"
       item: NETHERITE_AXE
+  "armor":
+    0:
+      name: "Some helmet"
+      item: LEATHER_HELMET
+      eventsToUpgrade:
+        - kill 10 zombie
+    1:
+      name: "Super helmet!"
+      item: DIAMOND_HELMET
+  "fishing-rod":
+    0:
+      name: "Some fishing rod"
+      item: FISHING_ROD
+      eventsToUpgrade:
+        - fish 10 pufferfish
+    1:
+      name: "Super fishing rod!"
+      item: FISHING_ROD
+      unbreakable: true
 ```
 
 Example of an item:<br>
@@ -114,6 +136,7 @@ Supported events:
 - break     // Break a block using this item
 - kill      // Kill an entity using this item
 - damage    // Damage entity using this item
+- fish      // Fish 
 ```
 
 ` - kill 10 zombie` - Means not else than kill 10 zombie<br>
@@ -121,7 +144,7 @@ Supported events:
 ` - break 3 diamond_ore` - Break diamond ore<br>
 ` - break 10 *` - Break 10 ANY block<br>
 ` - break 10 *%_ore` - Break 10 blocks which name contains "_ore"<br>
-
+` - fish 10 pufferfish` - Player need to fish 10 pufferfishes<br>
 
 
 </details>

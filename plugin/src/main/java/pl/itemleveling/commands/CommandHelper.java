@@ -4,7 +4,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.util.StringUtil;
 import pl.itemleveling.ItemLeveling;
 import pl.itemleveling.item.CustomItem;
