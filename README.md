@@ -14,6 +14,7 @@
 # Installation
 
 <p>Put ItemLeveling.jar to your plugins folder and restart the server.</p>
+<p>REQUIRES NBT API FROM https://www.spigotmc.org/resources/nbt-api.7939/</p>
 
 # Configuration
 
